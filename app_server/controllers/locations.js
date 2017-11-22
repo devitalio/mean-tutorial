@@ -65,5 +65,9 @@ module.exports.locationInfo = function(req, res, next) {
 };
 
 module.exports.addReview = function(req, res, next) {
-  res.render('location-review-form', { title: 'Add Review' });
+  res.render('location-review-form', 
+  {
+    title: 'Add Review',
+    pageHeader: {title: 'La Rochelle'}
+  });
 };
