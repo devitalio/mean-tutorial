@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 
-var schema = mongoose.Schema({
+var locationSchema = mongoose.Schema({
   name: String,
   address: String,
   rating: Number,
