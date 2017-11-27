@@ -25,4 +25,4 @@ var locationSchema = mongoose.Schema({
   reviews: [reviewSchema]
 });
 
-mongoose.model('Location', locationSchema);
+mongoose.model('location', locationSchema, 'locations');
