@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var readLine = require ("readline");
+
 if (process.platform === "win32"){
   var rl = readLine.createInterface ({
     input: process.stdin,
@@ -49,3 +50,5 @@ mongoose.connection.on('close', function() {console.log('Mongoose disconnected f
 var promise = mongoose.connect(dbURI, {
   useMongoClient: true,
 });
+
+require('./loc8r_schema');
