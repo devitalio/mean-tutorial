@@ -49,7 +49,7 @@ module.exports.locationInfo = function(req, res, next) {
       facilities: ['Hot drinks', 'Premium WiFi'],
       distance: '100m',
       coords: {lat: 46.776446, lng: 23.590588},
-      openningTimes:
+      openingTimes:
       [
         { days: 'Mon - Fri', opening: '07:00am', closing: '07:00pm', closed: false},
         { days: 'Sat', opening: '08:00am', closing: '05:00pm', closed: false},
