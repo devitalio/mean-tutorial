@@ -1,4 +1,7 @@
-helper = require('../lib/helpers');
+var helper = require('../lib/helpers');
+var mongoose = require('mongoose');
+
+var loc = mongoose.model('location');
 
 module.exports.locationsListByDistance = function(req, res){
 }
