@@ -12,7 +12,24 @@ module.exports.locationsCreate = function(req, res){
 }
 
 module.exports.locationsReadOne = function(req, res){
-  helpers.sendJsonResponse(res, 200, {'status':'success'});
+  if(!req.params || !req.params.locationid){
+    helpers.sendJsonResponse(res, 404, {message: "No location id in request"});
+    return;
+  }
+    
+  loc.findById(req.params.locationid).exec(function(err, location){
+    if(!location){
+      helpers.sendJsonResponse(res, 404, {message: "No location found"});
+      return;
+    }
+    else if(err){
+      helpers.sendJsonResponse(res, 404, {message: "No location found"});
+      return;
+    }
+    
+    helpers.sendJsonResponse(res, 200, location);
+  
+  });
 }
 
 module.exports.locationsDeleteOne = function(req, res){
