@@ -31,15 +31,18 @@ module.exports.reviewsReadOne = function(req, res){
           review = location.reviews.id(req.params.reviewid);
           if (!review) {
             helpers.sendJsonResponse(res, 404, { "message": "reviewid not found"});
+            return;
           }
           else {
             response = { location : { name : location.name, id : req.params.locationid},
                          review : review };
             helpers.sendJsonResponse(res, 200, response);
+            return;
           }
         }
         else {
           helpers.sendJsonResponse(res, 404, { "message": "No reviews found"});
+          return;
         }
         
         helpers.sendJsonResponse(res, 200, location);
