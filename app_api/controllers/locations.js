@@ -19,10 +19,30 @@ var theEarth = (function(){
   };
 })();
 
+var getLocations = function(results){
+  var locations = [];
+  
+  results.forEach(function(doc){
+    locations.push({
+      distance: theEarth.getDistanceFromRads(doc.dis),
+      name: doc.obj.name,
+      address: doc.obj.address,
+      rating: doc.obj.rating,
+      facilities: doc.obj.facilities,
+      _id: doc.obj._id
+    });
+  });
+  
+  return locations;
+}
 
 module.exports.locationsListByDistance = function(req, res){
   var lng = parseFloat(req.query.lng);
   var lat = parseFloat(req.query.lat);
+  
+  if(!lng || !lat)
+    return helpers.sendJsonResponse(res, 404, "No lattitude or longtitude specified");
+  
   var maxDistance = 10; 
   if(req.query.maxDistance)
     maxDistance = parseFloat(req.query.maxDistance);
@@ -34,23 +54,13 @@ module.exports.locationsListByDistance = function(req, res){
   loc.geoNear([lng,lat], options, function(err, results, stats){
     if(err)
       return helpers.sendJsonResponse(res, 200, err); 
-    var locations = [];
-    results.forEach(function(doc){
-      locations.push({
-        distance: theEarth.getDistanceFromRads(doc.dis),
-        name: doc.obj.name,
-        address: doc.obj.address,
-        rating: doc.obj.rating,
-        facilities: doc.obj.facilities,
-        _id: doc.obj._id
-      });
-    });
     
-    return helpers.sendJsonResponse(res, 200, locations);
+    
+    return helpers.sendJsonResponse(res, 200, getLocations(results));
   });
-  
-  //helpers.sendJsonResponse(res, 404, {message: "No location found"});
 }
+
+
 
 module.exports.locationsCreate = function(req, res){
   helpers.sendJsonResponse(res, 200, {'status':'success'});
