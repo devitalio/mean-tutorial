@@ -7,7 +7,7 @@ db.locations.insertOne(
     address : "str. Traian 2",
     rating : 5,
     facilities : [ "Hot drinks", "Premium WiFi"],
-    coords : [ 46.776446, 23.590588 ],
+    coords : [ 23.590393068906224, 46.77643438026678 ],
     openingTimes :
     [
         { days : "Mon - Fri", opening : "07:00am", closing : "07:00pm", closed : false },
@@ -25,7 +25,7 @@ db.locations.insertOne({
       address: 'Strada Iuliu Maniu 1',
       rating: 5,
       facilities: ['Hot drinks', 'Premium WiFi', 'Food'],
-      coords: [46.7701886, 23.5905202],
+      coords: [ 23.5904788995947, 46.77011506507951 ],
       openingTimes:
       [
         { days: 'Mon - Fri', opening: '07:00am', closing: '07:00pm', closed: false},
@@ -38,3 +38,5 @@ db.locations.insertOne({
         { _id: ObjectId(), author: 'Bill Gates', rating:5, timestamp:new Date('1 Oct 2017'), reviewText:'It was okay. Coffee wasn\'t great, but the wifi was fast.'}
       ]
 });
+
+db.locations.createIndex( { coords : "2dsphere" } );
