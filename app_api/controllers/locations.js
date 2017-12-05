@@ -34,7 +34,7 @@ var getLocations = function(results){
   });
   
   return locations;
-}
+};
 
 module.exports.locationsListByDistance = function(req, res){
   var lng = parseFloat(req.query.lng);
@@ -58,13 +58,42 @@ module.exports.locationsListByDistance = function(req, res){
     
     return helpers.sendJsonResponse(res, 200, getLocations(results));
   });
-}
-
-
+};
 
 module.exports.locationsCreate = function(req, res){
-  helpers.sendJsonResponse(res, 200, {'status':'success'});
-}
+  console.log(req.body);
+  var timetable = [];
+  var i = 0;
+  while(req.body["days"+i]){
+    timetable.push(
+    {
+      days: req.body["days"+i],
+      opening: req.body["opening"+i],
+      closing: req.body["closing"+i],
+      closed: req.body["closed"+i] == 'true',
+    });
+    i++;
+  }
+  
+  console.log(timetable);
+  var location = loc.create(
+  {
+    name: req.body.name,
+    address: req.body.address,
+    facilities: req.body.facilities !== undefined ? req.body.facilities.split(","): "unknown",
+    coords: [parseFloat(req.body.lng), parseFloat(req.body.lat)],
+    openingTimes : timetable,
+    
+  },
+  function(err,result){
+    if(err){
+      helpers.sendJsonResponse(res, 404, err);
+    }
+    else{
+      helpers.sendJsonResponse(res, 201, result);
+    }
+  });
+};
 
 module.exports.locationsReadOne = function(req, res){
   if(!req.params || !req.params.locationid){

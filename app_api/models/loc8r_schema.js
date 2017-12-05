@@ -8,10 +8,10 @@ var reviewSchema = new mongoose.Schema({
 });
 
 var openingTimeSchema = new mongoose.Schema({
-  days: {type: String, required: true},
+  days: { type: String, required: true},
   opening: String,
   closing: String,
-  closed: {type: Boolean, required: true}
+  closed: { type: Boolean, required: true}
 });
 
 
