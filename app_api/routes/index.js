@@ -9,7 +9,7 @@ router.get('/locations/:locationid', locationsController.locationsReadOne);
 router.delete('/locations/:locationid', locationsController.locationsDeleteOne);
 router.put('/locations/:locationid', locationsController.locationsUpdateOne);
 
-router.get('/locations/:locationid/reviews/', reviewsController.reviewsCreateOne);
+router.post('/locations/:locationid/reviews/', reviewsController.reviewsCreateOne);
 router.get('/locations/:locationid/reviews/:reviewid', reviewsController.reviewsReadOne);
 router.put('/locations/:locationid/reviews/:reviewid', reviewsController.reviewsUpdateOne);
 router.delete('/locations/:locationid/reviews/:reviewid', reviewsController.reviewsDeleteOne);
