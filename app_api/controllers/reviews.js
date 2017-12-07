@@ -19,7 +19,7 @@ module.exports.reviewsCreateOne = function(req, res){
       }
     });
     
-}
+};
 
 var addReview = function(req, res, location){
   location.reviews.push(
@@ -113,10 +113,54 @@ module.exports.reviewsReadOne = function(req, res){
         
         helpers.sendJsonResponse(res, 200, location);
       });
-}
+};
 
 module.exports.reviewsUpdateOne = function(req, res){
-}
+  if (!req.params.locationid || !req.params.reviewid) {
+    helpers.sendJsonResponse(res, 404, { "message": "Not found, locationid and reviewid are both required"});
+    return;
+  }
+  
+  loc
+    .findById(req.params.locationid)
+    .select('reviews')
+    .exec(function(err, location) {
+      var thisReview;
+      
+      if (!location) {
+        helpers.sendJsonResponse(res, 404, {"message": "locationid not found"});
+        return;
+      } else if (err) {
+        helpers.sendJsonResponse(res, 400, err);
+        return;
+      }
+      
+      if (location.reviews && location.reviews.length > 0) {
+      
+        thisReview = location.reviews.id(req.params.reviewid);
+        if (!thisReview) {
+          helpers.sendJsonResponse(res, 404, {"message": "reviewid not found"});
+        } else {
+          thisReview.author = req.body.author ? req.body.author : thisReview.author;
+          thisReview.rating = req.body.rating ? req.body.rating : thisReview.rating;
+          thisReview.reviewText = req.body.reviewText ? req.body.reviewText : thisReview.reviewText;
+          location.save(function(err, location) {
+            if (err) {
+              helpers.sendJsonResponse(res, 404, err);
+            } else {
+              
+              if(req.body.rating) {
+                updateAverageRating(location._id);
+              }
+              
+              helpers.sendJsonResponse(res, 200, thisReview);
+            }
+          });
+        }
+      }
+    });
+};
+
 
 module.exports.reviewsDeleteOne = function(req, res){
 }
