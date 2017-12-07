@@ -19,6 +19,22 @@ var theEarth = (function(){
   };
 })();
 
+var parseTimetable = function(req){
+  var timetable = [];
+  var i = 0;
+  while(req.body["days"+i]){
+    timetable.push(
+    {
+      days: req.body["days"+i],
+      opening: req.body["opening"+i],
+      closing: req.body["closing"+i],
+      closed: req.body["closed"+i] == 'true',
+    });
+    i++;
+  }
+  return timetable;
+}
+
 var getLocations = function(results){
   var locations = [];
   
@@ -61,29 +77,13 @@ module.exports.locationsListByDistance = function(req, res){
 };
 
 module.exports.locationsCreate = function(req, res){
-  console.log(req.body);
-  var timetable = [];
-  var i = 0;
-  while(req.body["days"+i]){
-    timetable.push(
-    {
-      days: req.body["days"+i],
-      opening: req.body["opening"+i],
-      closing: req.body["closing"+i],
-      closed: req.body["closed"+i] == 'true',
-    });
-    i++;
-  }
-  
-  console.log(timetable);
   var location = loc.create(
   {
     name: req.body.name,
     address: req.body.address,
     facilities: req.body.facilities !== undefined ? req.body.facilities.split(","): "unknown",
     coords: [parseFloat(req.body.lng), parseFloat(req.body.lat)],
-    openingTimes : timetable,
-    
+    openingTimes : parseTimetable(req)
   },
   function(err,result){
     if(err){
@@ -116,10 +116,38 @@ module.exports.locationsReadOne = function(req, res){
   });
 }
 
+module.exports.locationsUpdateOne = function(req, res){
+  if (!req.params.locationid) {
+    helpers.sendJsonResponse(res, 404, {"message": "Not found, locationid is required"});
+    return;
+  }
+  
+  loc
+    .findById(req.params.locationid)
+    .select('-reviews -rating')
+    .exec(function(err, location) {
+      if (!location) {
+        helpers.sendJsonResponse(res, 404, {"message": "locationid not found"});
+        return;
+      } 
+      else if (err) {
+        helpers.sendJsonResponse(res, 400, err);
+        return;
+      }
+      
+      location.name = req.body.name ? req.body.name : location.name;
+      location.address = req.body.address ? req.body.address : location.address;
+      location.facilities = req.body.facilities ? req.body.facilities.split(",") : location.facilities;
+      location.coords = req.body.lng && req.body.lat ? [parseFloat(req.body.lng), parseFloat(req.body.lat)] : location.coords ;
+      location.openingTimes = req.body.days0 ? parseTimetable(req) : location.openingTimes;
+      
+      location.save(function(err, location) {
+        if (err) { helpers.sendJsonResponse(res, 404, err); }
+        else { helpers.sendJsonResponse(res, 200, location); }
+      }); 
+    });    
+};
+
 module.exports.locationsDeleteOne = function(req, res){
   helpers.sendJsonResponse(res, 200, {'status':'success'});
-}
-
-module.exports.locationsUpdateOne = function(req, res){
-  helpers.sendJsonResponse(res, 200, {'status':'success'});
-}
+};

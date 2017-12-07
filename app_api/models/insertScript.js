@@ -1,6 +1,8 @@
 conn = new Mongo();
 db = conn.getDB('loc8r');
 
+db.locations.deleteMany({});
+
 db.locations.insertOne(
   {
     name : "La Rochelle",
