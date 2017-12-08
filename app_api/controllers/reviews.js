@@ -163,4 +163,40 @@ module.exports.reviewsUpdateOne = function(req, res){
 
 
 module.exports.reviewsDeleteOne = function(req, res){
-}
+
+  if (!req.params.locationid || !req.params.reviewid) {
+    helpers.sendJsonResponse(res, 404, { "message": "Not found, locationid and reviewid are both required"});
+    return;
+  }
+  
+  loc
+    .findById(req.params.locationid)
+    .select('reviews')
+    .exec(function(err, location) {
+      var thisReview;
+      
+      if (!location) {
+        helpers.sendJsonResponse(res, 404, {"message": "locationid not found"});
+        return;
+      } else if (err) {
+        helpers.sendJsonResponse(res, 400, err);
+        return;
+      }
+      
+      if (location.reviews && location.reviews.length > 0) {
+      
+        location.reviews.id(req.params.reviewid).remove();
+        location.save(function(err, location) {
+          if (err) {
+            helpers.sendJsonResponse(res, 404, err);
+          } else {
+        
+            if(req.body.rating) {
+              updateAverageRating(location._id);
+            }
+            helpers.sendJsonResponse(res, 200, thisReview);
+          }
+        });
+      }
+    }); 
+};
