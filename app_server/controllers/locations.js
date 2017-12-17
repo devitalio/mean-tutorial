@@ -1,4 +1,4 @@
-var request = require("request"):
+var request = require("request");
 var apiOptions = {
   server: "http://localhost:3000"
 };
@@ -9,35 +9,28 @@ if(process.env.NODE_ENV === "production")
 }
 
 module.exports.homeList = function(req, res, next) {
+  
+  var path = '/api/locations';
+  var requestOptions = {
+    url: apiOptions.server + path,
+    method: "GET",
+    json: {},
+    qs: { lng: 23.59039306, lat: 46.7764343802, maxDistance: 20 },
+  };
+  
+  request(requestOptions, function(err, response, body) {
+    renderHomepage(req,res, body);
+    console.log(body);
+  });
+};
+
+var renderHomepage = function(req, res, body) {
   res.render('locations-list',
   { 
     title: 'Loc8r - find a place to work with wifi',
     pageHeader: { title: 'Loc8r', strapline: 'Find places to work with wifi near you!'},
     sidebar: 'Looking for wifi and a seat? Loc8r helps you find places to work when out and about. Perhaps with coffee, cake or a pint? Let Loc8r help you find the place you\'re looking for.',
-    locations: 
-    [
-      {
-        name: 'La Rochelle',
-        address: 'str. Traian 2',
-        rating: 5,
-        facilities: ['Hot drinks', 'Premium WiFi'],
-        distance: '100m'
-      },
-      {
-        name: 'Coffee Queens',
-        address: 'Memorandumului 5',
-        rating: 4,
-        facilities: ['Food', 'Wifi'],
-        distance: '500m'
-      },
-      {
-        name: 'Burger King',
-        address: 'Tipografiei 15',
-        rating: 3,
-        facilities: ['Food', 'Hot Drinks', 'Premium Wifi'],
-        distance: '300m'
-      }
-    ] 
+    locations: body
   });
 };
 
