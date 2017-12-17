@@ -20,10 +20,11 @@ module.exports.homeList = function(req, res, next) {
   
   request(requestOptions, function(err, response, body) {
     
-    console.log(response);
-    for(var i = 0; i < body.length; i++)
-    {
-      body[i].distance = _formatDistance(body[i].distance);
+    if(response.statusCode === 200 && body.length){
+      for(var i = 0; i < body.length; i++)
+      {
+        body[i].distance = _formatDistance(body[i].distance);
+      }
     }
        
     renderHomepage(req,res, body);
