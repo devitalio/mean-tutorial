@@ -59,13 +59,13 @@ module.exports.locationsListByDistance = function(req, res){
   if(!lng || !lat)
     return helpers.sendJsonResponse(res, 404, "No lattitude or longtitude specified");
   
-  var maxDistance = 10; 
+  var maxKm = 10; 
   if(req.query.maxDistance)
-    maxDistance = parseFloat(req.query.maxDistance);
+    maxKm = parseFloat(req.query.maxDistance);
     
   var point = { type: "Point", coords: [lng,lat]};
   
-  var options = {spherical: true, num:10, maxDistance: theEarth.getRadsFromDistance(100)};
+  var options = {spherical: true, num:10, maxDistance: theEarth.getRadsFromDistance(maxKm)};
   
   loc.geoNear([lng,lat], options, function(err, results, stats){
     if(err)

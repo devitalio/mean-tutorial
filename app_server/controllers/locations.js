@@ -19,8 +19,15 @@ module.exports.homeList = function(req, res, next) {
   };
   
   request(requestOptions, function(err, response, body) {
+    
+    console.log(response);
+    for(var i = 0; i < body.length; i++)
+    {
+      body[i].distance = _formatDistance(body[i].distance);
+    }
+       
     renderHomepage(req,res, body);
-    console.log(body);
+    
   });
 };
 
@@ -33,6 +40,22 @@ var renderHomepage = function(req, res, body) {
     locations: body
   });
 };
+
+var _formatDistance = function (distance) {
+  if(!isNaN(parseFloat(distance)))
+    return distance;
+    
+  var numDistance, unit;
+  if (distance > 1) {
+    numDistance = parseFloat(distance).toFixed(1);
+    unit = 'km';
+  } else {
+    numDistance = parseInt(distance * 1000, 10);
+    unit = 'm';
+  }
+  return numDistance + unit;
+};
+
 
 module.exports.locationInfo = function(req, res, next) {
   res.render('location-info', 
