@@ -56,7 +56,7 @@ module.exports.locationsListByDistance = function(req, res){
   var lng = parseFloat(req.query.lng);
   var lat = parseFloat(req.query.lat);
   
-  if(!lng || !lat)
+  if( (!lng && lng !==0 )|| (!lat && lat !==0))
     return helpers.sendJsonResponse(res, 404, "No lattitude or longtitude specified");
   
   var maxKm = 10; 

@@ -16,6 +16,7 @@ module.exports.homeList = function(req, res, next) {
     method: "GET",
     json: {},
     qs: { lng: 23.59039306, lat: 46.7764343802, maxDistance: 20 },
+    //qs: { lng: 0, lat: 0, maxDistance: 20 }
   };
   
   request(requestOptions, function(err, response, body) {
@@ -33,12 +34,25 @@ module.exports.homeList = function(req, res, next) {
 };
 
 var renderHomepage = function(req, res, body) {
+
+  var message;
+  if(!(body instanceof Array)){
+    message = "API lookup error";
+    body = [];
+  }else{
+    if(!body.length){
+      message = "No nearby places";
+    }
+      
+  }
+  
   res.render('locations-list',
   { 
     title: 'Loc8r - find a place to work with wifi',
     pageHeader: { title: 'Loc8r', strapline: 'Find places to work with wifi near you!'},
     sidebar: 'Looking for wifi and a seat? Loc8r helps you find places to work when out and about. Perhaps with coffee, cake or a pint? Let Loc8r help you find the place you\'re looking for.',
-    locations: body
+    locations: body,
+    message: message
   });
 };
 
