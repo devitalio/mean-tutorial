@@ -25,7 +25,6 @@ module.exports.homeList = function(req, res, next) {
       for(var i = 0; i < body.length; i++)
       {
         body[i].distance = _formatDistance(body[i].distance);
-        console.log(_formatDistance(body[i].distance));
       }
     }
        
@@ -72,8 +71,27 @@ var _formatDistance = function (distance) {
   return numDistance + unit;
 };
 
+module.exports.locationInfo = function(req, res) {
 
-module.exports.locationInfo = function(req, res, next) {
+  var path = '/api/locations/'+ req.params.locationid;
+  var requestOptions = {
+    url: apiOptions.server + path,
+    method: "GET",
+    json: {},
+  };
+  
+  request(requestOptions, function(err, response, body) {
+    
+    console.log(response.statusCode);
+    if(response.statusCode === 200){
+      renderDetailPage(req, res);
+    }   
+  });
+  
+
+};
+
+var renderDetailPage = function(req, res) {
   res.render('location-info', 
   { 
     title: 'La Rochelle',
