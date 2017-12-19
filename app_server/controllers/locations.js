@@ -25,6 +25,7 @@ module.exports.homeList = function(req, res, next) {
       for(var i = 0; i < body.length; i++)
       {
         body[i].distance = _formatDistance(body[i].distance);
+        console.log(_formatDistance(body[i].distance));
       }
     }
        
@@ -57,7 +58,7 @@ var renderHomepage = function(req, res, body) {
 };
 
 var _formatDistance = function (distance) {
-  if(!isNaN(parseFloat(distance)))
+  if(isNaN(parseFloat(distance)))
     return distance;
     
   var numDistance, unit;
