@@ -7,23 +7,18 @@ html(lang="en-us")
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
     nav.navbar.navbar-default.navbar-fixed-top
-      .container
-        .navbar-header
-          a.navbar-brand(href='/') Loc8r
-          button.navbar-toggle(type='button', data-toggle='collapse', data-target='#navbar-main')
-            span.icon-bar
-            span.icon-bar
-            span.icon-bar
-          #navbar-main.navbar-collapse.collapse
-            ul.nav.navbar-nav
-              li
-                a(href='/about') About
-  .container
-    block content
+      a.navbar-brand(href='/') Loc8r
+      button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbar-main', aria-controls='navbarNavAltMarkup', aria-expanded='false', aria-label='Toggle navigation')
+        span#navbar-toggler-icon
+      #navbar-main.collapse.navbar-collapse
+        .navbar-nav
+          a.nav-item.nav-link(href='/about') About
+    .container
+      block content
     
-    footer
-      .row
-        .col-xs-12 &copy; 2017 Vitalii
+      footer
+        .row
+          .col-xs-12 &copy; 2017 Vitalii
     
   script(src='/javascripts/jquery-3.2.1.min.js')
   script(src='/bootstrap/js/bootstrap.min.js')
