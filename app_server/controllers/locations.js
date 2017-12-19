@@ -81,16 +81,16 @@ module.exports.locationInfo = function(req, res) {
   };
   
   request(requestOptions, function(err, response, body) {
-    
-    var data = body;
-    data.coords = { lat: body.coords[1], lng: body.coords[0]};
-    console.log(data);
     if(response.statusCode === 200){
+      var data = body;
+      data.coords = { lat: body.coords[1], lng: body.coords[0]};
+      console.log(data);
       renderDetailPage(req, res, data);
-    }   
+    }
+    else{
+      _showError(req, res, response.statusCode);
+    }
   });
-  
-
 };
 
 var renderDetailPage = function(req, res, data) {
@@ -104,6 +104,15 @@ var renderDetailPage = function(req, res, data) {
       callForAction: 'If you\'ve been and you like it - or if you don\'t - please leave a review to help other people just like you.'
     },
     location: data
+  });
+};
+
+var _showError = function(req, res, statusCode){
+  res.status(statusCode);
+  res.render('generic-text',
+  {
+    title: "Oups",
+    content: "following error code was detected: "+ statusCode
   });
 };
 
