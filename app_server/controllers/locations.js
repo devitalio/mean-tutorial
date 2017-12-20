@@ -71,8 +71,8 @@ var _formatDistance = function (distance) {
   return numDistance + unit;
 };
 
-module.exports.locationInfo = function(req, res) {
-
+var _getLocationInfo = function(req, res, callback){
+  
   var path = '/api/locations/'+ req.params.locationid;
   var requestOptions = {
     url: apiOptions.server + path,
@@ -85,12 +85,17 @@ module.exports.locationInfo = function(req, res) {
       var data = body;
       data.coords = { lat: body.coords[1], lng: body.coords[0]};
       console.log(data);
-      renderDetailPage(req, res, data);
+      callback(req, res, data);
     }
     else{
       _showError(req, res, response.statusCode);
     }
   });
+};
+
+module.exports.locationInfo = function(req, res) {
+  _getLocationInfo(req, res, renderDetailPage);
+  
 };
 
 var renderDetailPage = function(req, res, data) {
@@ -116,13 +121,18 @@ var _showError = function(req, res, statusCode){
   });
 };
 
-module.exports.addReview = function(req, res, next) {
+module.exports.addReview = function(req, res) {
+  _getLocationInfo(req, res, renderReviewForm);
+};
+
+var renderReviewForm = function(req, res, data){
   res.render('location-review-form', 
   {
     title: 'Add Review',
-    pageHeader: {title: 'La Rochelle'}
+    pageHeader: {title: data.name}
   });
-};
+}
+
 
 module.exports.doAddReview = function(req, res) {
 }
