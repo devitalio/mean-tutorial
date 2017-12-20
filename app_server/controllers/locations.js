@@ -123,3 +123,6 @@ module.exports.addReview = function(req, res, next) {
     pageHeader: {title: 'La Rochelle'}
   });
 };
+
+module.exports.doAddReview = function(req, res) {
+}
