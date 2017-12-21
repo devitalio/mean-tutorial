@@ -112,12 +112,12 @@ var renderDetailPage = function(req, res, data) {
   });
 };
 
-var _showError = function(req, res, statusCode){
-  res.status(statusCode);
+var _showError = function(req, res, result){
+  res.status(result.statusCode);
   res.render('generic-text',
   {
     title: "Oups",
-    content: "following error code was detected: "+ statusCode
+    content: "following error code was detected: "+ result
   });
 };
 
@@ -153,8 +153,11 @@ module.exports.doAddReview = function(req, res) {
     if(response.statusCode === 201){
      res.redirect('/location/' + locationid);
     }
-    else{
-      _showError(req, res, response.statusCode);
+    else if(response.statusCode === 400 && body.name && body.name === "ValidationError"){
+      res.redirect('/location/'+ locationid+ '/review/new?err=val' )
+    }
+    else {
+      _showError(req, res, response);
     }
   });
 }
