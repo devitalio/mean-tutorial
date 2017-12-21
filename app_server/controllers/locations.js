@@ -129,7 +129,8 @@ var renderReviewForm = function(req, res, data){
   res.render('location-review-form', 
   {
     title: 'Add Review',
-    pageHeader: {title: data.name}
+    pageHeader: {title: data.name},
+    error: req.query.err
   });
 }
 
